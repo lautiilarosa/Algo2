@@ -1,4 +1,4 @@
-from algo1 import *
+#from algo1 import *
 from linkedlist import *
 
 #Descripción: Agrega un elemento al comienzo de Q, siendo Q una
