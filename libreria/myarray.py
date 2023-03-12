@@ -1,4 +1,4 @@
-from Algo1 import *
+from algo1 import *
 import math
 
 def search(array,element):
