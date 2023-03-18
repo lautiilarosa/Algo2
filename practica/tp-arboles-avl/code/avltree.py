@@ -1,5 +1,3 @@
-from linkedlist import *
-from myqueue import *
 
 class AVLTree:
 	root = None
@@ -74,7 +72,7 @@ def calculateBalance(AVLTree):
                   AVLTree.root.bf = 0
                   return 
             else:
-                  update_bf(AVLTree.root)
+                  calculateBalanceR(AVLTree.root)
                   return 
       else:
             return
@@ -82,14 +80,14 @@ def calculateBalance(AVLTree):
 
 # Función Recursiva que calcula el balanceo de un nodo raíz
 
-def update_bf(currentnode):
+def calculateBalanceR(currentnode):
       #Caso Base
       if currentnode == None:
             return 0
 
       #Caso general
-      leftH = update_bf(currentnode.leftnode)
-      rightH = update_bf(currentnode.rightnode)
+      leftH = calculateBalanceR(currentnode.leftnode)
+      rightH = calculateBalanceR(currentnode.rightnode)
 
       currentnode.bf = leftH - rightH
 
@@ -136,3 +134,154 @@ def rebalanceR(currentnode,AVLTree):
 
       calculateBalance(AVLTree)            
 
+
+#Ejercicio 4:
+#Implementar la operación insert() en  el módulo avltree.py garantizando que el árbol  binario resultante sea un árbol AVL. 
+
+def insert(AVLTree, element, key):
+  newnode = AVLNode()
+  newnode.value = element
+  newnode.key = key
+  if AVLTree.root != None:
+    insertR(newnode, AVLTree.root)
+    return reBalance(AVLTree)
+  else:
+    newnode.bf = 0
+    AVLTree.root = newnode
+
+
+def insertR(newnode, currentnode):
+  if newnode.key != currentnode.key:
+    if newnode.key > currentnode.key:
+      if currentnode.rightnode == None:
+        currentnode.rightnode = newnode
+        newnode.parent = currentnode
+        return 
+      else:
+        return insertR(newnode, currentnode.rightnode)
+    else:
+      if currentnode.leftnode == None:
+        currentnode.leftnode = newnode
+        newnode.parent = currentnode
+        return 
+      else:
+        return insertR(newnode, currentnode.leftnode)
+  else:
+    return
+  
+
+#Ejercicio 5:
+#Implementar la operación delete() en  el módulo avltree.py garantizando que el árbol  binario resultante sea un árbol AVL.
+
+def deleteAVL(AVL, element):
+  deletenode = accessnodeE(AVL.root, element)
+  if deletenode != None:
+    deleteNodeCases(AVL, deletenode)
+    return reBalance(AVL)
+  else:
+    return
+
+
+def deleteNodeCases(AVL, deletenode):
+  key = deletenode.key
+
+  #Caso 1: El nodo a eliminar es una hoja
+  if deletenode.leftnode == None and deletenode.rightnode == None:
+    if deletenode.parent != None:
+      if deletenode.parent.leftnode != None and deletenode.parent.leftnode == deletenode:
+        deletenode.parent.leftnode = None
+        return key
+      else:
+        deletenode.parent.rightnode = None
+        return key
+    else:
+      AVL.root = None
+      return key
+
+  #Caso 2: El nodo a eliminar tiene un hijo
+
+  if deletenode.leftnode != None and deletenode.rightnode == None:
+    if deletenode.parent != None:
+      if deletenode.parent.leftnode != None and deletenode.parent.leftnode == deletenode:
+        deletenode.parent.leftnode = deletenode.leftnode
+      else:
+        deletenode.parent.rightnode = deletenode.leftnode
+
+      deletenode.leftnode.parent = deletenode.parent
+      return key
+
+    else:
+      AVL.root = deletenode.leftnode
+      deletenode.leftnode.parent = None
+      return key
+
+  if deletenode.rightnode != None and deletenode.leftnode == None:
+    if deletenode.parent != None:
+      if deletenode.parent.leftnode != None and deletenode.parent.leftnode == deletenode:
+        deletenode.parent.leftnode = deletenode.rightnode
+      else:
+        deletenode.parent.rightnode = deletenode.rightnode
+        
+      deletenode.rightnode.parent = deletenode.parent
+      return key
+
+    else:
+      AVL.root = deletenode.rightnode
+      deletenode.rightnode.parent = None
+      return key
+
+  #Caso 3: El nodo a eliminar tiene dos hijos
+
+  #Quiero insertar el mayor de los menores
+  # changenode = bigger(deletenode.leftnode)
+  # deletenode.value = changenode.value
+  # deletenode.key = changenode.key
+
+  # if changenode.parent.leftnode == changenode:
+  #   changenode.parent.leftnode = None
+  # else:
+  #   changenode.parent.rigthnode = None
+
+  # return key  
+
+  #Quiero insertar el menor de los mayores
+  changenode = smaller(deletenode.rightnode)
+  deletenode.value = changenode.value
+  deletenode.key = changenode.key
+
+  if changenode.parent.rightnode == changenode:
+    changenode.parent.rightnode = None
+  else:
+    changenode.parent.leftnode = None
+
+  return key  
+
+
+def bigger(node):
+  if node.rightnode != None:
+    return bigger(node.rightnode)
+  else:
+    return node
+
+
+def smaller(node):
+  if node.leftnode != None:
+    return smaller(node.leftnode)
+  else:
+    return node
+
+
+def accessnodeE(node, element):
+  if node != None:
+    if node.value == element:
+      return node
+    else:
+      rightnode = accessnodeE(node.rightnode, element)
+      if rightnode != None:
+        return rightnode
+
+      leftnode = accessnodeE(node.leftnode, element)
+      if leftnode != None:
+        return leftnode
+  else:
+    return
