@@ -23,7 +23,7 @@ def insert(T,element):
             T.root.children = linkedlist.LinkedList()
             linkedlist.add(T.root.children,trienode())
             T.root.children.head.value.parent = T.root
-            fillword(T.root.children.head,element,0)
+            insertword(T.root.children.head,element,0)
             return T
         #Caso 2: El árbol no está vacio
         else:
@@ -34,11 +34,13 @@ def insert(T,element):
             while end == False:
                 if currentnode.value.key == element[i]:
                     i += 1
+                    #La palabra está incluida dentro de otra
                     if i == len(element):
                         currentnode.value.isendofword = True
                         return T
                     
                     list = currentnode.value.children
+                    #Se agrega una nueva lista en el children del nodo
                     if list == None:
                         currentnode.value.children = linkedlist.LinkedList()
                         list = currentnode.value.children
@@ -48,19 +50,20 @@ def insert(T,element):
                     else:
                         currentnode = list.head
                 elif currentnode.nextNode == None:
+                    #Se necesitan nodos extras en la lista
                     linkedlist.add(list,trienode())
                     list.head.value.parent = currentnode.value.parent
                     end = True
                 else:
                     currentnode = currentnode.nextNode
 
-            fillword(list.head,element,i)
+            insertword(list.head,element,i)
             return T            
 
 
 
 #Agregar la palabra en el árbol
-def fillword(currentnode,word,i):
+def insertword(currentnode,word,i):
     for i in range(i,len(word)):
         currentnode.value.key = word[i]
         if i == len(word)-1:
@@ -77,14 +80,29 @@ def fillword(currentnode,word,i):
 #Entrada: El Trie sobre la cual se quiere buscar el elemento (Trie)  y el valor del elemento (palabra)
 #Salida: Devuelve False o True  según se encuentre el elemento.
 
+def search(T,element):
+    if T.root != None and len(element) != 0:
+        return searchR(T.root.children,T.root.children.head,element,0)
+    else:
+        return 
+    
+def searchR(currentlist,currentword,word,index):
+    if index == len(word) or currentword == None:
+        return False
+
+    if currentword.value.key == word[index]:
+        if currentword.value.isendofword == True and index == len(word)-1:
+            return True
+        elif currentword.value.children == None:
+            return False
+        else:
+            return searchR(currentword.value.children,currentword.value.children.head,word,index+1)
+    else:
+        return searchR(currentlist,currentword.nextNode,word,index)    
+
 
 
 
 
 arbol = trie()
-word1 = "hola"
-word2 = "ho"
-word3 = "papu"
-word4 = "hoz"
-word5 = "holas"
-
+insert()
