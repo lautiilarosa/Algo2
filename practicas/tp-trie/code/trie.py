@@ -156,6 +156,32 @@ def deleteR(currentnode,T):
     parent.value.children = None
     return deleteR(parent,T)
 
+#Ejercicio 4
+#Implementar un algoritmo que dado un árbol Trie T, un patrón p y un entero n, escriba todas las palabras del árbol que empiezan por p y sean de longitud n. 
+
+def wordswithpattern(Trie,p,n):
+    pattern = searchpattern(Trie.root.children.head,p,0)
+    if pattern != None:
+        #El patrón p tiene la misma longitud que n
+        if len(p) == n: return
+        #El patrón p no tiene children
+        if pattern.value.children == None: return
+        word = p
+        wordswithpatternR(pattern.value.children.head,n,len(p)+1,word)
+
+
+def wordswithpatternR(currentnode,n,i,word):
+    if currentnode == None:
+        return
+    word = word + currentnode.value.key
+    if i == n and currentnode.value.isendofword == True:
+        print(word)
+        print(" ")
+        return
+    if currentnode.value.children != None:
+        wordswithpatternR(currentnode.value.children.head,n,i+1,word)
+    wordswithpatternR(currentnode.nextNode,n,i,word[:-1])
+
 
 #Ejercicio 5
 #Implementar un algoritmo que dado los Trie T1 y T2 devuelva True si estos pertenecen al mismo documento y False en caso contrario
@@ -232,11 +258,8 @@ def autoCompletar(Trie,cadena):
     if pattern.value.children == None:
         print("")
         return 
-    word = cadena
+    word = cadena 
     list = []
     getallwordR(pattern.value.children.head,word,list)
     print(list)
-
-
-
 
