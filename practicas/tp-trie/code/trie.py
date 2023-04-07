@@ -143,7 +143,7 @@ def deleteR(currentnode,T):
     #Si el parent es justo la raíz del arbol eliminamos la letra y hacemos none al children de la raíz SI LA LISTA QUEDÓ VACÍA
     if parent == T.root:
         linkedlist.delete(parent.children,currentnode.value)
-        if parent.children == None:
+        if parent.children.head == None:
             parent.children = None
             return True
         return True
@@ -240,16 +240,3 @@ def autoCompletar(Trie,cadena):
 
 
 
-arbol = trie()
-insert(arbol,"hola")
-insert(arbol,"papu")
-insert(arbol,"papanatas")
-insert(arbol,"pastilla")
-insert(arbol,"pastizal")
-insert(arbol,"pan")
-insert(arbol,"alameda")
-insert(arbol,"alpaca")
-insert(arbol,"amarillo")
-
-print(" ")
-autoCompletar(arbol,"pas")
