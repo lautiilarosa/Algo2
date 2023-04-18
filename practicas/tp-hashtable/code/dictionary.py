@@ -1,57 +1,45 @@
-from algo1 import *
-import linkedlist
-
 class dictionarynode:
     value = None
     key = None
 
+#Función hash de la división
 def hashfunction(k,m):
     return (k%m)
 
-#insert(D,key, value)
+#Insert del hash 
 def hashinsert(D,key,value):
     node = dictionarynode()
     node.value = value
     node.key = key
-    hashvalue = hashfunction(key,len(D))
-    if D[hashvalue] == None:
-        newlist = linkedlist.LinkedList()
-        linkedlist.add(newlist,node)
-        D[hashvalue] = newlist
-        return D
-    linkedlist.add(D[hashvalue],node)
+    hashindex = hashfunction(key,len(D))
+    if D[hashindex] == None:
+        list = []
+        list.append(node)
+        D[hashindex] = list
+    else:
+        D[hashindex].append(node)
+    return key
 
-#search(D,key)
+#Search del hash
 def hashsearch(D,key):
-    hashvalue = hashfunction(key,len(D))
-    if D[hashvalue] == None:return None
-    currentnode = D[hashvalue].head
-    while currentnode != None:
-        if currentnode.value.key == key:
+    hashindex = hashfunction(key,len(D))
+    if D[hashindex] == None: return
+    for i in range(0,len(D[hashindex])):
+        if key == D[hashindex][i].key:
             return key
-        currentnode = currentnode.nextNode
-    return None    
+    return 
 
-#delete(D,key)
+#Delete del hash
 def hashdelete(D,key):
-    hashvalue = hashfunction(key,len(D))
-    if D[hashvalue] == None:return None
-    currentnode = D[hashvalue].head
-    while currentnode != None:
-        if currentnode.value.key == key:
-            linkedlist.delete(D[hashvalue],currentnode.value)
+    hashindex = hashfunction(key,len(D))
+    if D[hashindex] == None: return
+    for i in range(0,len(D[hashindex])):
+        if key == D[hashindex][i].key:
+            D[hashindex].pop(i)
+            if len(D[hashindex]) == 0:
+                D[hashindex] = None
             return D
-        currentnode = currentnode.nextNode
-    return None    
+    return     
 
 
-dictionary = []
-for i in range(0,9):
-    dictionary.append(None)
-
-print("")
-hashinsert(dictionary,5,"frank")
-hashinsert(dictionary,33,"lautaro")
-hashinsert(dictionary,15,"nicolas")
-hashdelete(dictionary,5)
 
