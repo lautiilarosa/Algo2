@@ -54,14 +54,13 @@ def ispermutation(s,p):
     asciiS = 0
     asciiP = 0
     for i in range(0,len(s)):
-        asciiS = asciiS + ord(s[i])
-        asciiP = asciiP + ord(p[i])
+        asciiS = asciiS + ord(s[i]) 
+        asciiP = asciiP + ord(p[i]) 
     #Con el codigo ascii como key inserto una cadena y luego busco en la tabla la otra key generado por la otra cadena
     hashinsert(hashtable,asciiS,s)
-    string = hashsearch(hashtable,asciiP)
-    if string != None:
-        if string == s:
-            return True
+    key = hashsearch(hashtable,asciiP)
+    if key != None:
+        return True
     return False
 
 #Generar una table con el tamaño de slots primo aleatorio
@@ -90,6 +89,14 @@ def uniquelist(list):
         hashinsert(hashtable,list[i],list[i])
     return True
 
+#Ejercicio 6
+def codigopostal(codigo,hashtable):
+    key = 0
+    sizecodigo = len(codigo)
+    for i in range(0,sizecodigo):
+        key = key + (ord(codigo[i])) * pow(26,sizecodigo-1-i)
+    hashinsert(hashtable,key,codigo)
+    return hashtable
 
 #Ejercicio 7
 def compressed(s):
@@ -139,36 +146,21 @@ def ocurrencia(p,a):
 
 #Ejercicio 9
 def subconjunto(t,s):
-    lens = len(s)
-    lent = len(t)
+    #T conjunto,s subconjunto
     hashtable = []
     hashtable = generartabla(hashtable)
-    
-    keys = 0
-    for i in range(0,lens):
-        keys = keys + (s[i] * pow(10,lens-1-i))
-    hashinsert(hashtable,keys,s)
-
-    keyt = 0
-    listT = []    
-    for i in range(0,lens):
-        keyt = keyt + (t[i] * pow(10,lens-1-i))
-        listT.append(t[i])
-    
-    for i in range(0,lent-lens + 1):
-        if hashsearch(hashtable,keyt) != None:
-            if listT == s:
-                return True
-        if i < lent-lens:
-            keyt = (keyt - t[i] * pow(10,lens-1)) * 10 + t[i+lens]
-            listT.pop(0)
-            listT.append(t[i+lens])
-    return False        
+    for i in range(0,len(t)):
+        hashinsert(hashtable,t[i],t[i])
+    for i in range(0,len(s)):
+        if hashsearch(hashtable,s[i]) == None:
+            return False
+    return True    
 
 
-s = [1,2,3,4]
-t = [15,18,1,2,3,4]
-if subconjunto(t,s) == True:
-    print("Se encontró el subconjunto")
+print(" ")
+s = "abc"
+p = "bca"
+if ispermutation(s,p) == True:
+    print("Son una permutación")
 else:
-    print("No se encontró el subconjunto")
+    print("No son una permutación")
